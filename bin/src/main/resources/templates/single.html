@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Квечерина</title>
+   <link rel="stylesheet" th:href="@{/css/audio.css}">
+   <link href='https://fonts.googleapis.com/css?family=Allerta' rel='stylesheet'>
+   <link rel="stylesheet" th:href="@{/css/navbar.css}">
+   <link rel="stylesheet" th:href="@{/css/table.css}">
+   <link rel="stylesheet" th:href="@{/css/popup.css}">
+     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+   
+   
+   
+  <style>
+ 
+    </style>
+</head>
+
+<body>
+
+<div th:replace="fragments/navbar :: navbar"></div>
+
+<h1 th:text="${show.filename}"></h1>
+
+<div class="top">
+ <img id="image" class="image" th:src="${show.imageUrl}" alt='sander image'/>  
+</div>
+
+     <form sec:authorize="isAuthenticated()" th:action="@{/updateImage/{id}(id=${show.id})}" enctype="multipart/form-data" method="post"  >
+          <input type="file" name="fileImage" id="fileImage"  required="required"/>
+                  <button>change</button>
+          </form>
+
+ <div class="container-audio">
+              <audio id="audio" controls >
+               <source th:src="${show.url}" >
+              </audio>
+ </div>   
+
+    <div class="small-container container-audio">
+    <table>
+     <tr>
+      <th>Artist</th>
+      <th>Song</th>
+      <th class="hide">Year Released</th>
+     </tr>
+     <tr th:each="song : ${show.songs}" class="cart">
+      <td >
+        <div class="cart-info " th:each="artist : ${song.artists}" >
+          <img th:src="${artist.imageUrl}">
+           <div class="hide">
+            <p th:text="${artist.fullName}"></p>
+           </div>
+        </div>
+        <form sec:authorize="isAuthenticated()" th:action="@{/newArtist/{id}/{sid}(id=${show.id},sid=${song.id})}" th:object="${artist}" method="post">
+      <input th:field="*{fullName}" type="text" maxlength="100" required="required"/>
+      <label for="input" class="control-label">A</label><i class="bar"></i>
+      <button id="artist-btn" type="submit" class="">Submit</button>
+    </form>
+    
+      </td>
+      <td th:text="${song.name}"></td>
+      <td class="hide" th:text="${song.releaseYear}" ></td>
+      
+     </tr>
+    </table>
+    
+    
+   </div>
+   
+   <a th:href="@{/newSong/{id}(id=${show.id})}">Нова Песна</a>
+   
+   
+   <div th:replace="fragments/footer :: footer"></div>
+   
+    
+    <script type="text/javascript" th:src="@{/js/popup.js}"></script>
+    <script type="text/javascript" th:src="@{/js/navbar.js}"></script>
+</body>
+
+</html>          
