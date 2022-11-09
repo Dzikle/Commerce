@@ -1,0 +1,6 @@
+--- 
+job_1: 
+  script: 
+    - "echo world"
+  tags: 
+    - windows-runner
